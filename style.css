@@ -1,0 +1,20 @@
+body{
+    background: black;
+    overflow-x: hidden;
+}
+*{
+    color: white;
+}
+#cart-table th, cart-table td{
+    text-align: center;
+}
+#total-cost{
+    font-size: 24px;
+    font-weight: bold;
+}
+@media print{
+    .no-print{
+        display: none;
+
+    }
+}
