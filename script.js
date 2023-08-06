@@ -33,9 +33,9 @@ $(document).ready(function () {
           "</td><td>" +
           item.quantity +
           "</td><td>TK " +
-          item.price.toFixed(1) +
+          item.price.toFixed(2) +
           "</td><td>TK " +
-          item.totalPrice.toFixed(1) +
+          item.totalPrice.toFixed(2) +
           '</td><td><button class="btn btn-sm btn-danger"><i class="fa fa-trash-alt"></i></button></td></tr>'
       );
 
@@ -55,7 +55,7 @@ $(document).ready(function () {
 
   function updateTotalCost() {
     var totalCost = getTotalCost();
-    $("#total-cost").text("Total Cost: TK " + totalCost.toFixed(1));
+    $("#total-cost").text("Total Cost: TK " + totalCost.toFixed(2));
   }
 
   function getTotalCost() {
@@ -86,7 +86,7 @@ $(document).ready(function () {
   }
 
   function voucherCalculation(){
-    var vouchercal = dueCalcluted().toFixed(1) - voucher().toFixed(1);
+    var vouchercal = dueCalcluted().toFixed(2) - voucher().toFixed(2);
 
     return vouchercal
   }
@@ -108,11 +108,26 @@ $(document).ready(function () {
     return formattedDate;
   }
 
+  // Invoice Number generator function
+  let invoiceCount = localStorage.getItem("invoiceCount") || 1;
+
+    function generateInvoiceNumber() {
+      const invoicePrefix = "";
+      const paddedCount = invoiceCount.toString().padStart(3, "0");
+      const invoiceNumber = invoicePrefix + paddedCount;
+      invoiceCount++;
+      // Save the updated invoice count to localStorage
+      localStorage.setItem("invoiceCount", invoiceCount);
+      return invoiceNumber;
+    }
+
  
   function generateInvoice() {
     var customerName = $("#customer-name").val();
     var customerPhone = $("#customer-phone").val();
     var customerDelivaryAddress = $("#delivery-address").val();
+    //Call this function whenever you need a new invoice number
+    const newInvoiceNumber = generateInvoiceNumber();
 
     var currentDateValue = currentDate();
 
@@ -138,10 +153,10 @@ $(document).ready(function () {
 				</div>
 				<div class="invoice_sec">
         <p class="invoice bold">INVOICE</p>
-        <!-- <p class="invoice_no">
+        <p class="invoice_no">
           <span class="bold">Invoice</span>
-          <span>#3488</span>
-        </p> -->
+          <span>${newInvoiceNumber}</span>
+        </p>
         <p class="date">
           <span class="bold">Date</span>
           <span>${currentDateValue}</span>
@@ -180,13 +195,13 @@ $(document).ready(function () {
                             <!-- <p>Lorem ipsum dolor sit.</p> -->
                         </div>
                         <div class="col col_price">
-                                <p>TK${item.price.toFixed(1)}</p>
+                                <p>TK${item.price.toFixed(2)}</p>
                         </div>
                         <div class="col col_qty">
                                 <p>${item.quantity}</p>
                         </div>
                         <div class="col col_total">
-                                <p>TK${item.totalPrice.toFixed(1)}</p>
+                                <p>TK${item.totalPrice.toFixed(2)}</p>
                         </div>
                     </div>`;
       });
@@ -201,19 +216,19 @@ $(document).ready(function () {
                     <div class="grandtotal_sec">
                         <p class="bold">
                             <span>Subtotal</span>
-                            <span>TK${getTotalCost().toFixed(1)}</span>
+                            <span>TK${getTotalCost().toFixed(2)}</span>
                         </p>
                         <p>
                             <span>Discount</span>
-                            <span>-${voucher().toFixed(1)}</span>
+                            <span>-${voucher().toFixed(2)}</span>
                         </p>
                         <p>
                             <span>PAID</span>
-                            <span>TK${paid().toFixed(1)}</span>
+                            <span>TK${paid().toFixed(2)}</span>
                         </p>
                            <p class="bold">
                             <span>Total</span>
-                            <span>TK${voucherCalculation().toFixed(1)}</span></span>
+                            <span>TK${voucherCalculation().toFixed(2)}</span></span>
                         </p>
                     </div>
                 </div>
