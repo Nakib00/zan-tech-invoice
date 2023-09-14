@@ -37,6 +37,11 @@ Invoice ZAN Tech is a simple web application that allows users to create and man
 
 10. You can print or save the generated invoice for record-keeping or sharing with the customer.
 
+## Watch the Video Tutorial
+
+[![Watch the Video Tutorial](https://img.youtube.com/vi/GEqqIlCd0DY/0.jpg)](https://youtu.be/GEqqIlCd0DY)
+
+
 ## Technologies Used
 
 - HTML
