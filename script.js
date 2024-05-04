@@ -4,6 +4,7 @@ $(document).ready(function () {
   $("#item-form").on("submit", addItemToCart);
   $("#cart-table").on("click", ".btn-danger", removeItemFromCart);
   $("#generated-invoice").on("click", generateInvoice);
+  $("#cart-table").on("input", ".item-quantity", updateItemQuantity);
 
   function addItemToCart(event) {
     event.preventDefault();
@@ -27,23 +28,43 @@ $(document).ready(function () {
       };
 
       items.push(item);
+      updateCart();
+      $("#itame-name").val("");
+      $("#itame-price").val("");
+      $("#itame-quantity").val("");
+
+      // updateTotalCost();
+      // $("#itame-name").val("");
+      // $("#itame-price").val("");
+      // $("#itame-quantity").val("");
+    }
+  }
+
+  function updateCart() {
+    $("#cart-table tbody").empty();
+    items.forEach(function (item, index) {
       $("#cart-table tbody").append(
         "<tr><td>" +
           item.name +
-          "</td><td>" +
+          "</td><td><input type='number' class='form-control item-quantity' value='" +
           item.quantity +
-          "</td><td>TK " +
+          "'></td><td>TK " +
           item.price.toFixed(2) +
           "</td><td>TK " +
           item.totalPrice.toFixed(2) +
           '</td><td><button class="btn btn-sm btn-danger"><i class="fa fa-trash-alt"></i></button></td></tr>'
       );
+    });
 
-      updateTotalCost();
-      $("#itame-name").val("");
-      $("#itame-price").val("");
-      $("#itame-quantity").val("");
-    }
+    updateTotalCost();
+  }
+
+  function updateItemQuantity() {
+    var index = $(this).closest("tr").index();
+    var newQuantity = parseInt($(this).val());
+    items[index].quantity = newQuantity;
+    items[index].totalPrice = items[index].price * newQuantity;
+    updateCart();
   }
 
   function removeItemFromCart() {
@@ -67,38 +88,39 @@ $(document).ready(function () {
     return totalCost;
   }
 
-  function paid(){
+  function paid() {
     var _Paid = $("#paid").val();
-    var paids = _Paid-0;
+    var paids = _Paid - 0;
 
     return paids;
   }
 
-  function dueCalcluted(){
+  function dueCalcluted() {
     due = getTotalCost() - paid();
     return due;
   }
 
-  function voucher(){
-    var _voucher= $("#voucher").val();
+  function voucher() {
+    var _voucher = $("#voucher").val();
     cvocher = _voucher - 0;
     return cvocher;
   }
 
-  function voucherCalculation(){
+  function voucherCalculation() {
     var vouchercal = dueCalcluted().toFixed(2) - voucher().toFixed(2);
 
-    return vouchercal
+    return vouchercal;
   }
 
-  function currentDate(){
+  function currentDate() {
     var currentDate = new Date();
 
     var year = currentDate.getFullYear();
     var month = currentDate.getMonth() + 1; // Note: Months are 0-indexed, so we add 1
     var day = currentDate.getDate();
 
-    var formattedDate = addLeadingZero(day) + "-" + addLeadingZero(month) + "-" + year;
+    var formattedDate =
+      addLeadingZero(day) + "-" + addLeadingZero(month) + "-" + year;
 
     // Helper function to add leading zero to single-digit numbers
     function addLeadingZero(number) {
@@ -111,17 +133,16 @@ $(document).ready(function () {
   // Invoice Number generator function
   let invoiceCount = localStorage.getItem("invoiceCount") || 1;
 
-    function generateInvoiceNumber() {
-      const invoicePrefix = "";
-      const paddedCount = invoiceCount.toString().padStart(3, "0");
-      const invoiceNumber = invoicePrefix + paddedCount;
-      invoiceCount++;
-      // Save the updated invoice count to localStorage
-      localStorage.setItem("invoiceCount", invoiceCount);
-      return invoiceNumber;
-    }
+  function generateInvoiceNumber() {
+    const invoicePrefix = "";
+    const paddedCount = invoiceCount.toString().padStart(3, "0");
+    const invoiceNumber = invoicePrefix + paddedCount;
+    invoiceCount++;
+    // Save the updated invoice count to localStorage
+    localStorage.setItem("invoiceCount", invoiceCount);
+    return invoiceNumber;
+  }
 
- 
   function generateInvoice() {
     var customerName = $("#customer-name").val();
     var customerPhone = $("#customer-phone").val();
@@ -228,7 +249,9 @@ $(document).ready(function () {
                         </p>
                            <p class="bold">
                             <span>Total</span>
-                            <span>TK${voucherCalculation().toFixed(2)}</span></span>
+                            <span>TK${voucherCalculation().toFixed(
+                              2
+                            )}</span></span>
                         </p>
                     </div>
                 </div>
